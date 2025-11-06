@@ -56,7 +56,13 @@
       "admin_panel": "Админ панель",
       "api_issues": "Проблемы с API"
     },
-
+    "network": {
+      "no_connection": "Нет соединения",
+      "slow_speed": "Медленная скорость",
+      "connection_drops": "Обрывы соединения",
+      "vpn_issues": "Проблемы с VPN",
+      "wifi_problems": "Проблемы с Wi-Fi"
+    },
     "software": {
       "installation_error": "Ошибка установки",
       "update_failed": "Не удается обновить",
