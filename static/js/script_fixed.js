@@ -48,12 +48,6 @@ function checkFormCompleteness() {
         }
     }
     
-    // Также обновляем состояние обычной кнопки
-    const submitBtn = document.getElementById('submit');
-    if (submitBtn) {
-        submitBtn.disabled = !isComplete;
-    }
-    
     return isComplete;
 }
 
