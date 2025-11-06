@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Telegram WebApp</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .debug-info {
+            background: #f0f0f0;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            word-wrap: break-word;
+        }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        button {
+            padding: 10px 20px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Telegram WebApp Debug</h1>
+    
+    <div id="status" class="debug-info">
+        Проверяем инициализацию...
+    </div>
+    
+    <div id="info" class="debug-info">
+        <strong>Информация о WebApp:</strong><br>
+        <div id="webappInfo"></div>
+    </div>
+    
+    <button onclick="testSendData()">Отправить тестовые данные</button>
+    <button onclick="showUserInfo()">Показать информацию о пользователе</button>
+    
+    <div id="result" class="debug-info" style="display: none;">
+        <strong>Результат:</strong><br>
+        <div id="resultText"></div>
+    </div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        
+        function updateStatus(message, isSuccess) {
+            const statusEl = document.getElementById('status');
+            statusEl.textContent = message;
+            statusEl.className = 'debug-info ' + (isSuccess ? 'success' : 'error');
+        }
+        
+        function updateInfo(info) {
+            document.getElementById('webappInfo').innerHTML = info;
+        }
+        
+        function showResult(text) {
+            document.getElementById('resultText').innerHTML = text;
+            document.getElementById('result').style.display = 'block';
+        }
+        
+        // Проверяем инициализацию
+        if (tg) {
+            updateStatus('✅ Telegram WebApp инициализирован успешно!', true);
+            tg.ready();
+            tg.expand();
+            
+            let info = '';
+            info += 'Platform: ' + (tg.platform || 'unknown') + '<br>';
+            info += 'Version: ' + (tg.version || 'unknown') + '<br>';
+            info += 'Init Data: ' + (tg.initData ? 'есть' : 'нет') + '<br>';
+            info += 'Init Data Unsafe: ' + (tg.initDataUnsafe ? JSON.stringify(tg.initDataUnsafe, null, 2) : 'нет') + '<br>';
+            
+            updateInfo(info);
+            
+            // Настраиваем главную кнопку
+            tg.MainButton.text = "Тестовая отправка";
+            tg.MainButton.show();
+            tg.MainButton.onClick(testSendData);
+            
+        } else {
+            updateStatus('❌ Telegram WebApp НЕ доступен! Откройте эту страницу через бота.', false);
+            updateInfo('WebApp можно использовать только внутри Telegram.');
+        }
+        
+        function testSendData() {
+            if (!tg) {
+                showResult('❌ WebApp недоступен');
+                return;
+            }
+            
+            const testData = {
+                "Основная причина проблемы": "Телеграмм",
+                "Дополнительное объяснение": "Проблемы с входом",
+                "Текст": "Это тестовое сообщение для проверки работы WebApp",
+                "timestamp": new Date().toISOString()
+            };
+            
+            try {
+                console.log('Отправляем данные:', testData);
+                tg.sendData(JSON.stringify(testData));
+                showResult('✅ Данные отправлены!<br><pre>' + JSON.stringify(testData, null, 2) + '</pre>');
+            } catch (error) {
+                showResult('❌ Ошибка отправки: ' + error.message);
+            }
+        }
+        
+        function showUserInfo() {
+            if (!tg || !tg.initDataUnsafe || !tg.initDataUnsafe.user) {
+                showResult('❌ Информация о пользователе недоступна');
+                return;
+            }
+            
+            const user = tg.initDataUnsafe.user;
+            let userInfo = '';
+            userInfo += 'ID: ' + user.id + '<br>';
+            userInfo += 'First Name: ' + (user.first_name || '-') + '<br>';
+            userInfo += 'Last Name: ' + (user.last_name || '-') + '<br>';
+            userInfo += 'Username: ' + (user.username || '-') + '<br>';
+            userInfo += 'Language: ' + (user.language_code || '-') + '<br>';
+            
+            showResult(userInfo);
+        }
+    </script>
+</body>
+</html>
