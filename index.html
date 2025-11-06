@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title data-text="page_title">Форма отправки проблем</title>
-    <!-- Подключаем Telegram WebApp SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="./static/css/style.css">
 </head>
@@ -17,7 +16,6 @@
                 <label for="mainReason" data-text="labels.main_reason">Основная причина проблемы:</label>
                 <select id="mainReason" required>
                     <option value="" data-text="placeholders.select_reason">Выберите причину</option>
-                    <!-- Основные причины будут загружены через JavaScript -->
                 </select>
             </div>
             
@@ -25,7 +23,6 @@
                 <label for="additionalDetails" data-text="labels.additional_details">Дополнительное объяснение:</label>
                 <select id="additionalDetails" required disabled>
                     <option value="" data-text="placeholders.first_select_reason">Сначала выберите основную причину</option>
-                    <!-- Детали будут загружены через JavaScript -->
                 </select>
             </div>
             
@@ -34,14 +31,12 @@
                 <textarea id="description" data-placeholder="placeholders.description" required></textarea>
             </div>
             
-            <!-- Обычная кнопка (скрывается в Telegram WebApp) -->
             <button type="submit" id="submit" class="submit-btn" data-text="submit_button">Отправить</button>
         </form>
         
-        <!-- JSON вывод (скрывается в Telegram WebApp) -->
         <div id="jsonOutput" class="json-output"></div>
     </div>
 
-    <script src="./static/js/script.js"></script>
+    <script src="./static/js/script_fixed.js"></script>
 </body>
 </html>
